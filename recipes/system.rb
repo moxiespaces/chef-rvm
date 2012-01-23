@@ -21,16 +21,28 @@ include_recipe "rvm::system_install"
 
 install_rubies  = node['rvm']['install_rubies'] == true ||
                   node['rvm']['install_rubies'] == "true"
+  
+  ruby_patch_url=node['rvm']['ruby_patch_url']
+    ruby_options = Hash.new
+    if ruby_patch_url
+      ruby_file=node['rvm']['ruby_patch_file']
+      ruby_patch_cmd=`curl -s #{ruby_patch_url} > #{ruby_file}`
+    #  Chef::Log.info("#{ruby_patch_cmd}, #{ruby_file}")
+      ruby_options = { :patch => ruby_file, :force => true }
+     # Chef::Log.info("Patching rvm_ruby[#{rubie}] from #{rvm_patch_url}")
+    end
 
 if install_rubies
   # install additional rubies
   node['rvm']['rubies'].each do |rubie|
-    rvm_ruby rubie
+    rvm_ruby rubie do
+     options ruby_options
+    end
   end
 
   # set a default ruby
   rvm_default_ruby node['rvm']['default_ruby']
-
+  
   # install global gems
   node['rvm']['global_gems'].each do |gem|
     rvm_global_gem gem[:name] do

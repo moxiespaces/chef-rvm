@@ -156,6 +156,7 @@ class Chef
         opts[:rubies].each do |rubie|
           rvm_ruby rubie do
             user  opts[:user]
+            options opts[:options]
           end
         end
 
