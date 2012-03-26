@@ -19,8 +19,8 @@
 # limitations under the License.
 #
 # Ruby GC patch
-default['rvm']['ruby_patch_url'] = "https://raw.github.com/gist/856296/patch-1.9.2-gc.patch"
-default['rvm']['ruby_patch_file'] = "/tmp/rvmgc.patch"
+default['rvm']['ruby_patch_url'] = ""
+default['rvm']['ruby_patch_file'] = ""
 
 # ruby that will get installed and set to `rvm use default`.
 #default['rvm']['default_ruby']      = "ruby-1.9.3-p0"
