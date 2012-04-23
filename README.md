@@ -80,9 +80,11 @@ the recipes and LWRPs run on these platforms without error:
 * ubuntu (10.04/10.10/11.04)
 * debian (6.0)
 * mac_os_x (10.6/10.7)
+* mac_os_x_server
 * suse (openSUSE, SLES)
 * centos
 * amazon (2011.09)
+* scientific
 * redhat
 * fedora
 
@@ -101,11 +103,11 @@ this cookbook. All the methods listed below assume a tagged version release
 is the target, but omit the tags to get the head of development. A valid
 Chef repository structure like the [Opscode repo][chef_repo] is also assumed.
 
-### <a name="installation-librarian"></a> Using Librarian
+### <a name="installation-librarian"></a> Using Librarian-Chef
 
-The [Librarian][librarian] gem aims to be Bundler for your Chef cookbooks.
-Include a reference to the cookbook in a **Cheffile** and run
-`librarian-chef install`. To install with Librarian:
+[Librarian-Chef][librarian] is a bundler for your Chef cookbooks.
+Include a reference to the cookbook in a [Cheffile][cheffile] and run
+`librarian-chef install`. To install Librarian-Chef:
 
     gem install librarian
     cd chef-repo
@@ -242,9 +244,17 @@ set, use an empty string (`""`) or a value of `"system"`.
 
 A list of additional RVM system-wide Rubies to be built and installed. This
 list does not need to necessarily contain your default Ruby as the
-`rvm_default_ruby` resource will take care of installing itself. For example:
+`rvm_default_ruby` resource will take care of installing itself. You may also
+include patch info. For example:
 
-    node['rvm']['rubies'] = [ "ree-1.8.7", "jruby" ]
+    node['rvm']['rubies'] = [
+      "ree-1.8.7",
+      "jruby",
+      {
+        :version => '1.9.3-p125-perf',
+        :patch => "falcon"
+      }
+    ]
 
 The default is an empty array: `[]`.
 
@@ -361,7 +371,14 @@ The hash keys correspond to the default/system equivalents. For example:
       { 'user'          => 'jenkins',
         'version'       => '1.7.0',
         'default_ruby'  => 'jruby-1.6.3',
-        'rubies'        => ['1.8.7', '1.9.2', 'ree', 'rbx'],
+        'rubies' => [
+          "ree-1.8.7",
+          "jruby",
+          {
+            :version => '1.9.3-p125-perf',
+            :patch => "falcon"
+          }
+        ],
         'rvmrc'         => {
           'rvm_project_rvmrc'             => 1,
           'rvm_gemset_create_on_use_flag' => 1,
@@ -1433,6 +1450,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 [chef_repo]:            https://github.com/opscode/chef-repo
+[cheffile]:             https://github.com/applicationsonline/librarian/blob/master/lib/librarian/chef/templates/Cheffile
 [compilation]:          http://wiki.opscode.com/display/chef/Evaluate+and+Run+Resources+at+Compile+Time
 [dragons]:              http://en.wikipedia.org/wiki/Here_be_dragons
 [gem_package]:          http://wiki.opscode.com/display/chef/Resources#Resources-Package

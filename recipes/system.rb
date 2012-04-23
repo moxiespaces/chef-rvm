@@ -19,7 +19,7 @@
 
 include_recipe "rvm::system_install"
 
-install_rubies  = node['rvm']['install_rubies'] == true ||
+perform_install_rubies  = node['rvm']['install_rubies'] == true ||
                   node['rvm']['install_rubies'] == "true"
   
   ruby_patch_url=node['rvm']['ruby_patch_url']

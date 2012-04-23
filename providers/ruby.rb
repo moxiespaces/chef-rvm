@@ -24,7 +24,7 @@ include Chef::RVM::RubyHelpers
 
 def load_current_resource
   @rubie        = normalize_ruby_string(select_ruby(new_resource.ruby_string))
-  @ruby_string  = @rubie
+  @ruby_string  = new_resource.ruby_string
   @rvm_env      = ::RVM::ChefUserEnvironment.new(new_resource.user)
 end
 
@@ -32,6 +32,7 @@ action :install do
   next if skip_ruby?
   
   if ruby_installed?(@rubie)
+
     Chef::Log.debug("rvm_ruby[#{@rubie}] is already installed, so skipping")
   else
     install_start = Time.now
@@ -122,10 +123,10 @@ def install_ruby_dependencies(rubie)
   when /^ruby-/, /^ree-/, /^rbx-/, /^kiji/
     case node['platform']
       when "debian","ubuntu"
-        pkgs = %w{ build-essential bison openssl libreadline6 libreadline6-dev
-                   zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-0
-                   libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev autoconf
-                   libc6-dev ssl-cert }
+        pkgs  = %w{ build-essential openssl libreadline6 libreadline6-dev
+                    zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev
+                    sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev
+                    ncurses-dev automake libtool bison ssl-cert }
         pkgs += %w{ subversion }  if rubie =~ /^ruby-head$/
       when "suse"
         pkgs = %w{ gcc-c++ patch zlib zlib-devel libffi-devel
@@ -136,7 +137,7 @@ def install_ruby_dependencies(rubie)
           pkgs += %w{ readline readline-devel openssl-devel }
         end
         pkgs += %w{ git subversion autoconf } if rubie =~ /^ruby-head$/
-      when "centos","redhat","fedora","amazon"
+      when "centos","redhat","fedora","scientific","amazon"
         pkgs = %w{ gcc-c++ patch readline readline-devel zlib zlib-devel
                    libyaml-devel libffi-devel openssl-devel }
         pkgs += %w{ git subversion autoconf } if rubie =~ /^ruby-head$/
@@ -147,7 +148,7 @@ def install_ruby_dependencies(rubie)
     #include_recipe "java"
     case node['platform']
     when "debian","ubuntu"
-      pkgs += %w{ g++ }
+      pkgs += %w{ g++ ant }
     end
   end
 
