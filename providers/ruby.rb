@@ -30,19 +30,17 @@ end
 
 action :install do
   next if skip_ruby?
-  
-  if ruby_installed?(@rubie)
 
+  if ruby_installed?(@ruby_string)
     Chef::Log.debug("rvm_ruby[#{@rubie}] is already installed, so skipping")
   else
     install_start = Time.now
-    
+
     install_ruby_dependencies @rubie
     options = new_resource.options
-         Chef::Log.info("Ruby options #{options}") if options
 
     Chef::Log.info("Building rvm_ruby[#{@rubie}], this could take awhile...")
-
+    Chef::Log.info("Ruby options #{options}") if options
     if @rvm_env.install(@rubie,options)
       Chef::Log.info("Installation of rvm_ruby[#{@rubie}] was successful.")
       @rvm_env.use @rubie
