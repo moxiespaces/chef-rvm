@@ -23,8 +23,10 @@ default['rvm']['ruby_patch_url'] = ""
 default['rvm']['ruby_patch_file'] = ""
 
 # ruby that will get installed and set to `rvm use default`.
+
 default['rvm']['default_ruby']      = "system"
 default['rvm']['user_default_ruby'] = "ruby-1.9.3-p125"
+
 
 # list of additional rubies that will be installed
 default['rvm']['rubies']      = []

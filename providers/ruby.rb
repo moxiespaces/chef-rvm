@@ -45,6 +45,7 @@ action :install do
       Chef::Log.info("Installation of rvm_ruby[#{@rubie}] was successful.")
       @rvm_env.use @rubie
       update_installed_rubies
+      new_resource.updated_by_last_action(true)
 
       Chef::Log.info("Importing initial gemsets for rvm_ruby[#{@rubie}]")
       if @rvm_env.gemset_initial
@@ -72,6 +73,7 @@ action :uninstall do
     if @rvm_env.uninstall(@rubie)
       update_installed_rubies
       Chef::Log.debug("Uninstallation of rvm_ruby[#{@rubie}] was successful.")
+      new_resource.updated_by_last_action(true)
     else
       Chef::Log.warn("Failed to uninstall rvm_ruby[#{@rubie}]. " +
         "Check logs in #{::RVM.path}/log/#{@rubie}")
@@ -90,6 +92,7 @@ action :remove do
     if @rvm_env.remove(@rubie)
       update_installed_rubies
       Chef::Log.debug("Removal of rvm_ruby[#{@rubie}] was successful.")
+      new_resource.updated_by_last_action(true)
     else
       Chef::Log.warn("Failed to remove rvm_ruby[#{@rubie}]. " +
         "Check logs in #{::RVM.path}/log/#{@rubie}")
@@ -129,7 +132,7 @@ def install_ruby_dependencies(rubie)
       when "suse"
         pkgs = %w{ gcc-c++ patch zlib zlib-devel libffi-devel
                    sqlite3-devel libxml2-devel libxslt-devel }
-        if node.platform_version.to_f >= 11.0
+        if node['platform_version'].to_f >= 11.0
           pkgs += %w{ libreadline5 readline-devel libopenssl-devel }
         else
           pkgs += %w{ readline readline-devel openssl-devel }
